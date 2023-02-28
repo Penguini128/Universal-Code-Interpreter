@@ -1,0 +1,161 @@
+{
+	"OPEN_BLOCK" <"{">
+	"CLOSE_BLOCK" <"}">
+	"STATEMENT_DELIMITER" <"\n">
+	"TOKEN_DELIMITER" <" ">
+
+	"IMMEDIATE" (i) <8BV>
+	"REGISTER" (r) <"Reg" + 3BI>
+	"PIN" (p) <"P." + 3BI>
+}
+
+"Nop" ["0000000000000000"]
+"Halt" ["1111000000000000"]
+"Ld" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0001000000000\r"] )
+		"Acc1" ( "REGISTER" ["0001000100000\r"] )
+	)
+	"Imm" ( 
+		"Acc0" ( "IMMEDIATE" ["00011000\i"] )
+		"Acc1" ( "IMMEDIATE" ["00011001\i"] )
+	)
+)
+"Str" (
+	"Acc0" ( "REGISTER" ["0001001000000000"] )
+	"Acc1" ( "REGISTER" ["0001001100000000"] )
+	"ParIn0" ( "REGISTER" ["0001010000000000"] )
+	"ParIn1" ( "REGISTER" ["0001010100000000"] )
+	"Imm" ( "REGISTER" ["00111\r\i"] )
+)
+"Set" ( "PIN" ["00100\p00000000"] )
+"Clr" ( "PIN" ["00101\p00000000"] )
+"Add" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0100000000000\r"] )
+		"Acc1" ( "REGISTER" ["0110000000000\r"] )
+	)
+	"Imm" (
+		"Acc0" ( "IMMEDIATE" ["01001000\i"] )
+		"Acc1" ( "IMMEDIATE" ["01101000\i"] )
+	)
+)
+"Addc" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0100000100000\r"] )
+		"Acc1" ( "REGISTER" ["0110000100000\r"] )
+	)
+	"Imm" (
+		"Acc0" ( "IMMEDIATE" ["01001001\i"] )
+		"Acc1" ( "IMMEDIATE" ["01101001\i"] )
+	)
+)
+"Sub" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0100001000000\r"] )
+		"Acc1" ( "REGISTER" ["0110001000000\r"] )
+	)
+	"Imm" (
+		"Acc0" ( "IMMEDIATE" ["01001010\i"] )
+		"Acc1" ( "IMMEDIATE" ["01101010\i"] )
+	)
+)
+"Subc" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0100001100000\r"] )
+		"Acc1" ( "REGISTER" ["0110001100000\r"] )
+	)
+	"Imm" (
+		"Acc0" ( "IMMEDIATE" ["01001011\i"] )
+		"Acc1" ( "IMMEDIATE" ["01101011\i"] )
+	)
+)
+"AND" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0101000000000\r"] )
+		"Acc1" ( "REGISTER" ["0111000000000\r"] )
+	)
+	"Imm" (
+		"Acc0" ( "IMMEDIATE" ["01011000\i"] )
+		"Acc1" ( "IMMEDIATE" ["01111000\i"] )
+	)
+)
+"NAND" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0101000100000\r"] )
+		"Acc1" ( "REGISTER" ["0111000100000\r"] )
+	)
+	"Imm" ( 
+		"Acc0" ( "IMMEDIATE" ["01011001\i"] )
+		"Acc1" ( "IMMEDIATE" ["01111001\i"] )
+	)
+)
+"OR" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0101001000000\r"] )
+		"Acc1" ( "REGISTER" ["0111001000000\r"] )
+	)
+	"Imm" (
+		"Acc0" ( "IMMEDIATE" ["01011010\i"] )
+		"Acc1" ( "IMMEDIATE" ["01111010\i"] )
+	)
+)
+"NOR" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0101001100000\r"] )
+		"Acc1" ( "REGISTER" ["0111001100000\r"] )
+	)
+	"Imm" (
+		"Acc0" ( "IMMEDIATE" ["01011011\i"] )
+		"Acc1" ( "IMMEDIATE" ["01111011\i"] )
+	)
+)
+"XOR" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0101010000000\r"] )
+		"Acc1" ( "REGISTER" ["0111010000000\r"] )
+	)
+	"Imm" (
+		"Acc0" ( "IMMEDIATE" ["01011100\i"] )
+		"Acc1" ( "IMMEDIATE" ["01111100\i"] )
+	)
+)
+"XNOR" (
+	"Dir" (
+		"Acc0" ( "REGISTER" ["0101010100000\r"] )
+		"Acc1" ( "REGISTER" ["0111010100000\r"] )
+	)
+	"Imm" (
+		"Acc0" ( "IMMEDIATE" ["01011101\i"] )
+		"Acc1" ( "IMMEDIATE" ["01111101\i"] )
+	)
+)
+"RR" (
+	"Acc0" ["0100010000000000"]
+	"Acc1" ["0110010000000000"]
+)
+"RL" (
+	"Acc0" ["0100010100000000"]
+	"Acc1" ["0110010100000000"]
+)
+"Out" (
+	"Dir" (
+		"SerOut0" ( "REGISTER" ["1000000000000\r"] )
+		"SerOut1" ( "REGISTER" ["1000000100000\r"] )
+		"ParOut0" ( "REGISTER" ["1000001000000\r"] )
+		"ParOut1" ( "REGISTER" ["1000001100000\r"] )
+	)
+	"Imm" (
+		"SerOut0" ( "IMMEDIATE" ["10001000\i"] )
+		"SerOut1" ( "IMMEDIATE" ["10001001\i"] )
+		"ParOut0" ( "IMMEDIATE" ["10001010\i"] )
+		"ParOut1" ( "IMMEDIATE" ["10001011\i"] )
+	)
+)
+"Jmp" (
+	"Imm" ( "IMMEDIATE" ["10011000\i"] )
+	"Z" ( "Imm" ( "IMMEDIATE" ["10011001\i"] ) )
+	"NZ" ( "Imm" ( "IMMEDIATE" ["10011010\i"] ) )
+	"C" ( "Imm" ( "IMMEDIATE" ["10011011\i"] ) )
+	"NC" ( "Imm" ( "IMMEDIATE" ["10011100\i"] ) )
+)

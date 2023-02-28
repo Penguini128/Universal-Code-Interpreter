@@ -1,0 +1,4 @@
+assembler_syntax_file = resembly.syntax
+compiler_syntax_file = speakeasy.syntax
+assemblable_file_extension = .asm
+compilable_file_extension = .spkz

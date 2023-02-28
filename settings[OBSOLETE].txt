@@ -1,0 +1,8 @@
+debug_assembler_syntax = true
+debug_compiler_syntax = false
+
+enable_assembler = false
+debug_assembler = false
+
+enable_compiler = false
+debug_compiler = false
