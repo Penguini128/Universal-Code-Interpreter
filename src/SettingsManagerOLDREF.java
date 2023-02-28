@@ -73,7 +73,7 @@ public class SettingsManagerOLDREF {
 					if (lineTokens[2].substring(lineTokens[2].length() - 7, lineTokens[2].length()).equals(".syntax")) {
 						configs[1] = lineTokens[2];
 					} else {
-						ErrorManager.printDebugErrorMessage(debugMode, "In \"config.txt\" for syntax configuration \"" + f.getName() + 
+						ErrorManager.printErrorMessage(debugMode, "In \"config.txt\" for syntax configuration \"" + f.getName() + 
 																		"\", specified syntax file must end with extension \".syntax\"", 1);
 						configLoadFailure = true;
 					}
@@ -84,7 +84,7 @@ public class SettingsManagerOLDREF {
 					if (lineTokens[2].substring(lineTokens[2].length() - 7, lineTokens[2].length()).equals(".syntax")) {
 						configs[3] = lineTokens[2];
 					} else {
-						ErrorManager.printDebugNotification(debugMode, "In \"config.txt\" for syntax configuration \"" + f.getName() + 
+						ErrorManager.printNotification(debugMode, "In \"config.txt\" for syntax configuration \"" + f.getName() + 
 																		"\", specified syntax file must end with extension \".syntax\"", 2);
 						configLoadFailure = true;
 					}
@@ -95,7 +95,7 @@ public class SettingsManagerOLDREF {
 					if (lineTokens[2].charAt(0) == '.') {
 						configs[2] = lineTokens[2];
 					} else {
-						ErrorManager.printDebugNotification(debugMode, "In \"config.txt\" for syntax configuration \"" + f.getName() + 
+						ErrorManager.printNotification(debugMode, "In \"config.txt\" for syntax configuration \"" + f.getName() + 
 																		"\", specified file extension must start with a period", 3);
 						configLoadFailure = true;
 					}
@@ -106,7 +106,7 @@ public class SettingsManagerOLDREF {
 					if (lineTokens[2].charAt(0) == '.') {
 						configs[4] = lineTokens[2];
 					} else {
-						ErrorManager.printDebugNotification(debugMode, "In \"config.txt\" for syntax configuration \"" + f.getName() + 
+						ErrorManager.printNotification(debugMode, "In \"config.txt\" for syntax configuration \"" + f.getName() + 
 																		"\", specified file extension must start with a period", 4);
 						configLoadFailure = true;
 					}
@@ -124,12 +124,12 @@ public class SettingsManagerOLDREF {
 
 			File assemblerSyntaxFile = new File(f.getPath() + "\\" + configs[1]);
 			if (!assemblerSyntaxFile.exists()) {
-				ErrorManager.printDebugNotification(debugMode, "Missing file \"" + configs[1] + "\" in syntax configuration \"" + f.getName() + "\"");
+				ErrorManager.printNotification(debugMode, "Missing file \"" + configs[1] + "\" in syntax configuration \"" + f.getName() + "\"");
 				configLoadFailure = true;
 			}
 			File compilerSyntaxFile = new File(f.getPath() + "\\" + configs[3]);
 			if (!compilerSyntaxFile.exists()) {
-				ErrorManager.printDebugNotification(debugMode, "Missing file \"" + configs[3] + "\" in syntax configuration \"" + f.getName() + "\"");
+				ErrorManager.printNotification(debugMode, "Missing file \"" + configs[3] + "\" in syntax configuration \"" + f.getName() + "\"");
 				configLoadFailure = true;
 			}
 
@@ -141,7 +141,7 @@ public class SettingsManagerOLDREF {
 					if (s.equals(t)) valid = true;
 				}
 				if (!valid) {
-					ErrorManager.printDebugNotification(debugMode, "Syntax configuration \"" + f.getName() + "\" contains extraneous files");
+					ErrorManager.printNotification(debugMode, "Syntax configuration \"" + f.getName() + "\" contains extraneous files");
 					configLoadFailure = true;
 					break;
 				}

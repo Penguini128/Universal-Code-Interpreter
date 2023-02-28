@@ -1,34 +1,25 @@
 public class SyntaxConfiguration {
 
-    private String configName;
-    private String assemblerSyntaxFileName;
-    private String compilerSyntaxFileName;
-    private String assemblableFileExtension;
-    private String compilableFileExtension;
+    private ConfigSettings settings;
     private SyntaxNode assemblerSyntax;
     private SyntaxNode compilerSyntax;
 
     private boolean configTxtContainsErrors = false;
 
-    SyntaxConfiguration(String[] configs, SyntaxNode assemblerSyntax, SyntaxNode compilerSyntax) {
-        configName = configs[0];
-        assemblerSyntaxFileName = configs[1];
-        assemblableFileExtension = configs[2];
-        compilerSyntaxFileName = configs[3];
-        compilableFileExtension = configs[4];
-        for (int i = 1; i < configs.length; i++) { if (configs[i] == null) configTxtContainsErrors = true; }
+    SyntaxConfiguration(ConfigSettings settings, SyntaxNode assemblerSyntax, SyntaxNode compilerSyntax) {
+        this.settings = settings;
         this.assemblerSyntax = assemblerSyntax;
         this.compilerSyntax = compilerSyntax;
     }
 
-    public String getConfigName() { return configName; }
-    public String getAssemblerSyntaxFileName() { return assemblerSyntaxFileName; }
-    public String getCompilerSyntaxFileName() { return compilerSyntaxFileName; }
-    public String getAssemblableFileExtension() { return assemblableFileExtension; }
-    public String getCompilableFileExtension() { return compilableFileExtension; }
+    public ConfigSettings getConfigSettings() { return settings; }
+    public String getConfigName() { return settings.getConfigName(); }
     public SyntaxNode getAssemblerSyntax() { return assemblerSyntax; }
     public SyntaxNode getCompilerSyntax() { return compilerSyntax; }
 
     public boolean getConfigTxtErrors() { return configTxtContainsErrors; }
+
+    public String toString() { return settings.getConfigName(); }
+    public boolean equals(SyntaxConfiguration other) { return (settings.getConfigName().equals(other.getConfigSettings().getConfigName())); }
 
 }

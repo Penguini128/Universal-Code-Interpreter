@@ -68,7 +68,7 @@ public class SyntaxBuilder {
 		try {
 			scanner = new Scanner(syntaxFile);
 		} catch (FileNotFoundException e) {
-			ErrorManager.printDebugNotification(debugMode, "Error occured when attempting to read \"" + filePath + "\" in syntax configuration folder \"" + syntaxFile.getParent() + "\"");
+			ErrorManager.printNotification(debugMode, "Error occured when attempting to read \"" + filePath + "\" in syntax configuration folder \"" + syntaxFile.getParent() + "\"");
 			return null;
 		}
 
@@ -77,7 +77,7 @@ public class SyntaxBuilder {
 		// Gets the first line of the syntax file and stores it to "syntaxString". If the file is empty, prints
 		// and appropriate error message and returns
 		if (!scanner.hasNext()) {
-			ErrorManager.printDebugErrorMessage(debugMode, "No data found within file");
+			ErrorManager.printErrorMessage(debugMode, "No data found within file");
 			scanner.close();
 			return null;
 		}
@@ -93,7 +93,7 @@ public class SyntaxBuilder {
 		}
 
 		if (currentChar != '{') {
-			ErrorManager.printDebugErrorMessage(debugMode, "Syntax file must start with open bracket");
+			ErrorManager.printErrorMessage(debugMode, "Syntax file must start with open bracket");
 			scanner.close();
 			return null;
 		}
@@ -123,7 +123,7 @@ public class SyntaxBuilder {
 						lastInQuotes += '\t';
 					} else if (syntaxEscapeCharacters.contains(currentChar)) {
 						lastInQuotes += "\\" + currentChar;
-					} else ErrorManager.printDebugErrorMessage(debugMode, "Quotations contain invalid escase character \"\\" + currentChar + "\"", currentLine);
+					} else ErrorManager.printErrorMessage(debugMode, "Quotations contain invalid escase character \"\\" + currentChar + "\"", currentLine);
 				} else if (currentChar == '\"') {
 					switch (lastToken) {
 						case OPEN_BRACKET:
@@ -177,7 +177,7 @@ public class SyntaxBuilder {
 		if (c == '\"') {
 			lastInQuotes = "";
 			betweenQuotes = true;
-		} else ErrorManager.printDebugErrorMessage(debugMode, s, currentLine);
+		} else ErrorManager.printErrorMessage(debugMode, s, currentLine);
 	}
 	
 }

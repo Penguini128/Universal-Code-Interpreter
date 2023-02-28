@@ -14,14 +14,14 @@ public class ErrorManager {
 		errorsFound = true;
 	}
 
-	public static void printDebugErrorMessage(boolean debug, String s) {
+	public static void printErrorMessage(boolean debug, String s) {
 		if (debug) {
  			System.out.println("ERROR:\t" + s);
 			errorsFound = true;
 		}
 	}
 	
-	public static void printDebugErrorMessage(boolean debug, String s, int lineNumber) {
+	public static void printErrorMessage(boolean debug, String s, int lineNumber) {
 		if (debug) {
 			System.out.println("ERROR:\t" + s + " (at line " + lineNumber + ")");
 			errorsFound = true;
@@ -36,13 +36,13 @@ public class ErrorManager {
 		System.out.println("(!):\t" + s + " (at line " + lineNumber + ")");
 	}
 
-	public static void printDebugNotification(boolean debug, String s) {
+	public static void printNotification(boolean debug, String s) {
 		if (debug) {
  			System.out.println("(!):\t" + s);
 		}
 	}
 	
-	public static void printDebugNotification(boolean debug, String s, int lineNumber) {
+	public static void printNotification(boolean debug, String s, int lineNumber) {
 		if (debug) {
 			System.out.println("(!):\t" + s + " (at line " + lineNumber + ")");
 		}

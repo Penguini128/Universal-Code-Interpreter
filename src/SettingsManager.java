@@ -60,49 +60,16 @@ public class SettingsManager {
 			File configFile = new File(f.getPath() + "\\config.txt");
 			String[] configs = new String[5];
 
-			boolean configLoadFailure = false;
+			ConfigSettings config = ConfigSettings.load(configFile, false);
 
-			configs[0] = f.getName();
-
-			if (configFile.exists()) {
-				Scanner scanner;
-				try {
-					scanner = new Scanner(configFile);
-				} catch (FileNotFoundException e) {
-					ErrorManager.printErrorMessage("Error occured when attempting to read \"config.txt\" in syntax configuration folder \"" + f.getName() + "\"");
-					continue;
-				}
-				String[] lineTokens;
-
-				lineTokens = scanner.nextLine().split(" ");
-				if (validSetting(lineTokens, "assembler_syntax_file", 1, f.getName())
-					&& lineTokens[2].substring(lineTokens[2].length() - 7, lineTokens[2].length()).equals(".syntax")) {
-						configs[1] = lineTokens[2];
-				} else configLoadFailure = true;
-
-				lineTokens = scanner.nextLine().split(" ");
-				if (validSetting(lineTokens, "compiler_syntax_file", 2, f.getName())
-					&& lineTokens[2].substring(lineTokens[2].length() - 7, lineTokens[2].length()).equals(".syntax")) {
-						configs[3] = lineTokens[2];
-				} else configLoadFailure = true;
-
-				lineTokens = scanner.nextLine().split(" ");
-				if (validSetting(lineTokens, "assemblable_file_extension", 3, f.getName()) && lineTokens[2].charAt(0) == '.') {
-						configs[2] = lineTokens[2];
-				} else configLoadFailure = true;
-				
-				lineTokens = scanner.nextLine().split(" ");
-				if (validSetting(lineTokens, "compilable_file_extension", 4, f.getName()) && lineTokens[2].charAt(0) == '.') {
-					configs[4] = lineTokens[2];
-				} else configLoadFailure = true;
-
-				scanner.close();
-			} else {
-				configs[1] = "assembler.syntax";
-				configs[2] = ".asm";
-				configs[3] = "compiler.syntax";
-				configs[4] = ".comp";
+			if (!config.isValid()) {
+				SyntaxConfiguration newConfig = new SyntaxConfiguration(config, null, null);
+				allConfigs.add(newConfig);
+				ErrorManager.printNotification("Syntax configuration \"" + f.getName() + "\" not loaded due to errors in configuration");
+				continue;
 			}
+
+			boolean configLoadFailure = false;
 
 
 			File assemblerSyntaxFile = new File(f.getPath() + "\\" + configs[1]);
@@ -112,6 +79,7 @@ public class SettingsManager {
 				assemblerSyntax = SyntaxBuilder.build(assemblerSyntaxFile.getPath(), false);
 				if (assemblerSyntax == null) configLoadFailure = true;
 			}
+
 			File compilerSyntaxFile = new File(f.getPath() + "\\" + configs[3]);
 			SyntaxNode compilerSyntax = null;
 			if (!compilerSyntaxFile.exists()) configLoadFailure = true;
@@ -135,7 +103,7 @@ public class SettingsManager {
 				}
 			}
 
-			SyntaxConfiguration newConfig = new SyntaxConfiguration(configs, assemblerSyntax, compilerSyntax);
+			SyntaxConfiguration newConfig = new SyntaxConfiguration(config, assemblerSyntax, compilerSyntax);
 
 			allConfigs.add(newConfig);
 			if (!configLoadFailure) {
@@ -143,6 +111,7 @@ public class SettingsManager {
 			} else ErrorManager.printNotification("Syntax configuration \"" + f.getName() + "\" not loaded due to errors in configuration");
 		}
 		System.out.println("Syntax configuration loading complete!");
+
 	}
 
 	private static boolean validSetting(String[] tokens, String desiredSetting, int settingNumber, String configName) {
@@ -152,6 +121,27 @@ public class SettingsManager {
 			return false;
 		}
 	}
+
+	/*
+	private static boolean validateFiles(String[] files, String assemblerName, String compilerName, boolean showErrors) {
+
+		boolean invalidFiles = false;
+		String[] validFileNames = { "config.txt", "README.txt", assemblerName, compilerName };
+
+		for (String s : files) {
+			boolean valid = false;
+
+			for (String t : validFileNames) {
+				if (s.equals(t)) valid = true;
+			}
+			
+			if (!valid) {
+				ErrorManager.printErrorMessage(showErrors, "Extraneous file \"" + s + "\" found. Please remove this file");
+				invalidFiles = true;
+			}
+		}
+	}
+	*/
 
 	public static ArrayList<SyntaxConfiguration> getAllConfigurations() { return allConfigs; }
 	public static ArrayList<SyntaxConfiguration> getLoadedConfigurations() { return loadedConfigs; }

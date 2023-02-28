@@ -61,15 +61,15 @@ public class Main {
 			switch (currentMenu) {
 				case START:
 					for (int i = 0; i < validConfigs.size(); i++) {
-						System.out.println((i + 1) + ". " + validConfigs.get(i).getConfigName());
+						System.out.println((i + 1) + ". " + validConfigs.get(i));
 					}
 					break;
 				case DEBUG_START:
 					for (int i = 0; i < allConfigs.size(); i++) {
-						System.out.print((i + 1) + ". " + allConfigs.get(i).getConfigName());
+						System.out.print((i + 1) + ". " + allConfigs.get(i));
 						boolean isValid = false;
 						for (int j = 0; j < validConfigs.size(); j++) {
-							if (allConfigs.get(i).getConfigName().equals(validConfigs.get(j).getConfigName())) {
+							if (allConfigs.get(i).equals(validConfigs.get(j))) {
 								isValid = true;
 							}
 						}
@@ -79,7 +79,7 @@ public class Main {
 					break;
 				case DEBUG_FILE_SELECTION:
 					if (currentSyntaxConfiguration.getConfigTxtErrors())
-						System.out.println("File \"config.txt\" in \"" + currentSyntaxConfiguration.getConfigName() + "\" contains errors");
+						System.out.println("File \"config.txt\" in \"" + currentSyntaxConfiguration + "\" contains errors");
 					break;
 				default:
 					break;
@@ -115,8 +115,15 @@ public class Main {
 						currentMenu = MenuScreen.START;
 					} else {
 						currentSyntaxConfiguration = SettingsManager.getAllConfigurations().get(input - 1);
-						System.out.println("Syntax configuration \"" + currentSyntaxConfiguration.getConfigName() + "\" has been selected\n");
+						System.out.println("Syntax configuration \"" + currentSyntaxConfiguration.getConfigSettings().getConfigName() + "\" has been selected\n");
 						currentMenu = MenuScreen.DEBUG_FILE_SELECTION;
+					}
+					break;
+				case DEBUG_FILE_SELECTION:
+					if (input != 0) System.out.println("Invalid input. Please try again\n");
+					if (input == 0) {
+						System.out.println("Returning to syntax cofiguration selection\n\nPlease select one of the following syntax configurations:\n");
+						currentMenu = MenuScreen.DEBUG_START;
 					}
 					break;
 				default:
