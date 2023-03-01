@@ -103,6 +103,8 @@ public class SettingsManager {
 				}
 			}
 
+			validateFiles(f.list(), assemblerSyntaxPath, compilerSyntaxPath, false);
+
 			SyntaxConfiguration newConfig = new SyntaxConfiguration(config, assemblerSyntax, compilerSyntax);
 
 			allConfigs.add(newConfig);
@@ -122,7 +124,7 @@ public class SettingsManager {
 		}
 	}
 
-	/*
+	
 	private static boolean validateFiles(String[] files, String assemblerName, String compilerName, boolean showErrors) {
 
 		boolean invalidFiles = false;
@@ -140,8 +142,10 @@ public class SettingsManager {
 				invalidFiles = true;
 			}
 		}
+
+		return invalidFiles;
 	}
-	*/
+	
 
 	public static ArrayList<SyntaxConfiguration> getAllConfigurations() { return allConfigs; }
 	public static ArrayList<SyntaxConfiguration> getLoadedConfigurations() { return loadedConfigs; }

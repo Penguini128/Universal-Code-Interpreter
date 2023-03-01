@@ -6,19 +6,22 @@ public class ConfigSettings {
 
     boolean validConfig;
 
+    private File configFile;
     private String configName;
     private String assemblerSyntaxFileName;
     private String compilerSyntaxFileName;
     private String assemblableFileExtension;
     private String compilableFileExtension;
 
-    ConfigSettings(String configName) {
+    ConfigSettings(File configFile, String configName) {
         validConfig = false;
+        this.configFile = configFile;
         this.configName = configName;
     }
 
-    ConfigSettings(String[] configs) {
+    ConfigSettings(File configFile, String[] configs) {
         validConfig = true;
+        this.configFile = configFile;
         configName = configs[0];
         assemblerSyntaxFileName = configs[1];
         compilerSyntaxFileName = configs[2];
@@ -27,6 +30,7 @@ public class ConfigSettings {
     }
 
     public boolean isValid() { return validConfig; }
+    public File getConfigFile() { return configFile; }
     public String getConfigName() { return configName; }
     public String getAssemblerSyntaxFileName() { return assemblerSyntaxFileName; }
     public String getCompilerSyntaxFileName() { return compilerSyntaxFileName; }
@@ -46,7 +50,7 @@ public class ConfigSettings {
 					scanner = new Scanner(configFile);
 				} catch (FileNotFoundException e) {
 					ErrorManager.printErrorMessage("Error occured when attempting to read \"config.txt\" in syntax configuration folder \"" + configs[0] + "\"");
-					return new ConfigSettings(configs[0]);
+					return new ConfigSettings(configFile, configs[0]);
 				}
 				String[] lineTokens;
 
@@ -111,8 +115,8 @@ public class ConfigSettings {
 				configs[4] = ".comp";
 			}
 
-            if (!configLoadFailure) return new ConfigSettings(configs);
-            else return new ConfigSettings(configs[0]);
+            if (!configLoadFailure) return new ConfigSettings(configFile, configs);
+            else return new ConfigSettings(configFile, configs[0]);
     }
 
     private static boolean validSetting(String[] tokens, String desiredSetting) {

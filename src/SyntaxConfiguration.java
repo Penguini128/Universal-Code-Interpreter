@@ -4,8 +4,6 @@ public class SyntaxConfiguration {
     private SyntaxNode assemblerSyntax;
     private SyntaxNode compilerSyntax;
 
-    private boolean configTxtContainsErrors = false;
-
     SyntaxConfiguration(ConfigSettings settings, SyntaxNode assemblerSyntax, SyntaxNode compilerSyntax) {
         this.settings = settings;
         this.assemblerSyntax = assemblerSyntax;
@@ -16,8 +14,6 @@ public class SyntaxConfiguration {
     public String getConfigName() { return settings.getConfigName(); }
     public SyntaxNode getAssemblerSyntax() { return assemblerSyntax; }
     public SyntaxNode getCompilerSyntax() { return compilerSyntax; }
-
-    public boolean getConfigTxtErrors() { return configTxtContainsErrors; }
 
     public String toString() { return settings.getConfigName(); }
     public boolean equals(SyntaxConfiguration other) { return (settings.getConfigName().equals(other.getConfigSettings().getConfigName())); }

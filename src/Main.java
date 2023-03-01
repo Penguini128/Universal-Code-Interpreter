@@ -24,13 +24,6 @@ public class Main {
 
 		if (selectedOption == 0) return;
 
-		if (debugMode) {
-			SyntaxConfiguration selectedFolder = SettingsManager.getAllConfigurations().get(selectedOption - 1);
-			System.out.println("Syntax configuration \"" + selectedFolder.getConfigName() + "\" has been selected\n");
-			if (selectedFolder.getConfigTxtErrors()) System.out.println("File \"config.txt\" in \"" + selectedFolder.getConfigName() + "\" contains errors");
-		} else {
-
-		}
 	}
 
 	private static int promptConfigSelection() {
@@ -78,8 +71,10 @@ public class Main {
 					}
 					break;
 				case DEBUG_FILE_SELECTION:
-					if (currentSyntaxConfiguration.getConfigTxtErrors())
-						System.out.println("File \"config.txt\" in \"" + currentSyntaxConfiguration + "\" contains errors");
+					if (!currentSyntaxConfiguration.getConfigSettings().isValid()) {
+						System.out.println("Syntax configuration \"" + currentSyntaxConfiguration + "\" contains the following errorrs:");
+						ConfigSettings.load(currentSyntaxConfiguration.getConfigSettings().getConfigFile(), true);
+					}
 					break;
 				default:
 					break;
