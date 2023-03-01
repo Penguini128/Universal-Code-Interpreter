@@ -37,7 +37,7 @@ public class ConfigSettings {
 
             String[] configs = new String[5];
 			boolean configLoadFailure = false;
-			configs[0] = configFile.getParent();
+			configs[0] = configFile.getParentFile().getName();
 
 
 			if (configFile.exists()) {
