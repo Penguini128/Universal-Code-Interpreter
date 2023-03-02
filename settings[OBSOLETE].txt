@@ -1,2 +1,0 @@
-enable_assembler = false
-enable_compiler = false

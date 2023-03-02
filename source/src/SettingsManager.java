@@ -38,14 +38,14 @@ public class SettingsManager {
     public static boolean getEnableAssembler() { return enableAssembler; }
     public static boolean getEnableCompiler() { return enableCompiler; }
 
-    public static void loadSettings() {
+    public static boolean loadSettings() {
         
-		File syntaxConfigFolder = new File("syntax_configurations");
+		File syntaxConfigFolder = new File(System.getProperty("user.dir") + "\\syntax_configurations");
 
 		if (syntaxConfigFolder.exists() && syntaxConfigFolder.isDirectory()) {
 		} else {
-			ErrorManager.printErrorMessage("Folder \"syntax_configurations\" not found. This folder must be restored");
-			return;
+			ErrorManager.printErrorMessage("Folder \"syntax_configurations\" not found. This folder must be restored\n");
+			return false;
 		}
 
 		for (File f : syntaxConfigFolder.listFiles()) {
@@ -113,8 +113,8 @@ public class SettingsManager {
 			} else ErrorManager.printNotification("Syntax configuration \"" + f.getName() + "\" not loaded due to errors in configuration");
 		}
 		System.out.println("Syntax configuration loading complete!");
-
-	}
+		return true;
+	}	
 
 	private static boolean validSetting(String[] tokens, String desiredSetting, int settingNumber, String configName) {
 		if (tokens[0].equals(desiredSetting) && tokens[1].equals("=") && tokens.length == 3) {

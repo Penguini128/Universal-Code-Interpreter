@@ -1,1 +1,1 @@
-java -jar --enable-preview program.jar
+java -jar program.jar

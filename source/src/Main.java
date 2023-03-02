@@ -17,7 +17,11 @@ public class Main {
 	public static void main(String[] args) {
 
 		System.out.println();
-		SettingsManager.loadSettings();
+		if (!SettingsManager.loadSettings()) {
+			System.out.println("Press enter to terminate the program");
+			scanner.nextLine();
+			return;
+		}
 		System.out.println();
 
 		int selectedOption = promptConfigSelection();
