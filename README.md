@@ -12,4 +12,4 @@ The program will then output the resulting compiled and/or assembled files, or p
 
 This program also contains a debug mode for debugging syntax profiles. This allows users that are developing syntax profiles to address errors in their profiles without distracting from the main user experience. This debug mode is enabled by inputting ```-1``` in the main menu of the program.
 
-This is a test for git bash
+This is a test for git bash (secondary test)
