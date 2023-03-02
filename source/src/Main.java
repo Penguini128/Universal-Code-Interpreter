@@ -43,15 +43,15 @@ public class Main {
 		System.out.println("To select and option, type the corresponding number next to the option and press enter\nAt any point, enter 0 to return to the previous prompt/exit the program\n");
 
 		if (SettingsManager.getLoadedConfigurations().size() == 0) {
-			System.out.println("No valid syntax configurations found. Please enter -1 to enter debug mode, or press enter to end the program\n");
+			System.out.println("No valid syntax profiles found. Please enter -1 to enter debug mode, or press enter to end the program\n");
 			if (scanner.nextLine().equals("-1")) {
-				System.out.println("Debug mode enabled\n\nPlease select one of the following syntax configurations to debug:\n");
+				System.out.println("Debug mode enabled\n\nPlease select one of the following syntax profiles to debug:\n");
 				currentMenu = MenuScreen.DEBUG_START;
 				debugMode = true;
 			} else {
 				currentMenu = MenuScreen.EXIT;
 			}
-		} else System.out.println("Please select one of the following syntax configurations:\n");
+		} else System.out.println("Please select one of the following syntax profiles:\n");
 
 		while (currentMenu != MenuScreen.EXIT) {
 			
@@ -76,7 +76,7 @@ public class Main {
 					break;
 				case DEBUG_FILE_SELECTION:
 					if (!currentSyntaxConfiguration.getConfigSettings().isValid()) {
-						System.out.println("Syntax configuration \"" + currentSyntaxConfiguration + "\" contains the following errorrs:");
+						System.out.println("Syntax profile \"" + currentSyntaxConfiguration + "\" contains the following errorrs:");
 						ConfigSettings.load(currentSyntaxConfiguration.getConfigSettings().getConfigFile(), true);
 					}
 					break;
@@ -97,7 +97,7 @@ public class Main {
 					if (input == -2) System.out.println("Invalid input. Please try again\n");
 					else if (input == 0) currentMenu = MenuScreen.EXIT;
 					else if (input == -1) {
-						System.out.println("Debug mode enabled\n\nPlease select one of the following syntax configurations to debug:\n");
+						System.out.println("Debug mode enabled\n\nPlease select one of the following syntax profiles to debug:\n");
 						debugMode = true;
 						currentMenu = MenuScreen.DEBUG_START;
 					} else {
@@ -109,19 +109,19 @@ public class Main {
 					if (input == -2) System.out.println("Invalid input. Please try again\n");
 					else if (input == 0) currentMenu = MenuScreen.EXIT;
 					else if (input == -1) {
-						System.out.println("Debug mode disabled\n\nPlease select one of the following syntax configurations:\n");
+						System.out.println("Debug mode disabled\n\nPlease select one of the following syntax profiles:\n");
 						debugMode = false;
 						currentMenu = MenuScreen.START;
 					} else {
 						currentSyntaxConfiguration = SettingsManager.getAllConfigurations().get(input - 1);
-						System.out.println("Syntax configuration \"" + currentSyntaxConfiguration.getConfigSettings().getConfigName() + "\" has been selected\n");
+						System.out.println("Syntax profile \"" + currentSyntaxConfiguration.getConfigSettings().getConfigName() + "\" has been selected\n");
 						currentMenu = MenuScreen.DEBUG_FILE_SELECTION;
 					}
 					break;
 				case DEBUG_FILE_SELECTION:
 					if (input != 0) System.out.println("Invalid input. Please try again\n");
 					if (input == 0) {
-						System.out.println("Returning to syntax cofiguration selection\n\nPlease select one of the following syntax configurations:\n");
+						System.out.println("Returning to syntax profile selection\n\nPlease select one of the following syntax profiles:\n");
 						currentMenu = MenuScreen.DEBUG_START;
 					}
 					break;

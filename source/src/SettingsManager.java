@@ -40,18 +40,19 @@ public class SettingsManager {
 
     public static boolean loadSettings() {
         
-		File syntaxConfigFolder = new File(System.getProperty("user.dir") + "\\syntax_configurations");
+		String syntaxFolder = "syntax_profiles";
+		File syntaxConfigFolder = new File(System.getProperty("user.dir") + "\\" + syntaxFolder);
 
 		if (syntaxConfigFolder.exists() && syntaxConfigFolder.isDirectory()) {
 		} else {
-			ErrorManager.printErrorMessage("Folder \"syntax_configurations\" not found. This folder must be restored\n");
+			ErrorManager.printErrorMessage("Folder \"" + syntaxFolder + "\" not found. This folder must be restored\n");
 			return false;
 		}
 
 		for (File f : syntaxConfigFolder.listFiles()) {
 			if (f.isDirectory()) {
 				allConfigFolders.add(f);
-			} else ErrorManager.printNotification("Unexpected file \"" + f.getName() + "\" found in syntax configuration folder. This file "
+			} else ErrorManager.printNotification("Unexpected file \"" + f.getName() + "\" found in syntax profile folder. This file "
 												+ "will not affect program functionality, but should be removed");	
 		}
 
@@ -65,7 +66,7 @@ public class SettingsManager {
 			if (!config.isValid()) {
 				SyntaxConfiguration newConfig = new SyntaxConfiguration(config, null, null);
 				allConfigs.add(newConfig);
-				ErrorManager.printNotification("Syntax configuration \"" + f.getName() + "\" not loaded due to errors in configuration");
+				ErrorManager.printNotification("Syntax profile \"" + f.getName() + "\" not loaded due to errors in configuration");
 				continue;
 			}
 
@@ -110,9 +111,9 @@ public class SettingsManager {
 			allConfigs.add(newConfig);
 			if (!configLoadFailure) {
 				loadedConfigs.add(newConfig);
-			} else ErrorManager.printNotification("Syntax configuration \"" + f.getName() + "\" not loaded due to errors in configuration");
+			} else ErrorManager.printNotification("Syntax profile \"" + f.getName() + "\" not loaded due to errors in configuration");
 		}
-		System.out.println("Syntax configuration loading complete!");
+		System.out.println("Syntax profile loading complete!");
 		return true;
 	}	
 
