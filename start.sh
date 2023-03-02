@@ -6,5 +6,5 @@ else
 	javac -d bin src/*.java
 	cd ..
 	jar cfe program.jar Main -C source/bin .
-	sh start.sh
+	java -jar program.jar
 fi
