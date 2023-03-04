@@ -29,7 +29,7 @@ public class SyntaxBuilder {
 	private static final String defaultStatementDelimiter = "\\n";
 	private static final String defaultTokenDelimiter = " ";
 
-	private static boolean debugMode;
+	private static boolean showErrors;
 	private static boolean errorsFound;
 	private static int currentLine;
 	private static boolean betweenQuotes;
@@ -46,12 +46,11 @@ public class SyntaxBuilder {
 	 *  this Keyword hierarchy, assuming no errors are found in the input file.
 	 */
 
-	public static SyntaxNode build(String filePath, boolean debug) {
+	public static SyntaxNode build(String filePath, boolean showErrors) {
 		
 		// Initialize values of variables
 		errorsFound = false;
 		int currentLine = 1;
-		debugMode = debug;
 		lastInQuotes = "";
 		lastSpecialCaseName = "";
 		Stack<Character> pairTracker = new Stack<Character>();
@@ -68,7 +67,7 @@ public class SyntaxBuilder {
 		try {
 			scanner = new Scanner(syntaxFile);
 		} catch (FileNotFoundException e) {
-			ErrorManager.printNotification(debugMode, "Error occured when attempting to read \"" + filePath + "\" in syntax configuration folder \"" + syntaxFile.getParent() + "\"");
+			ErrorManager.printNotification(showErrors, "Error occured when attempting to read \"" + filePath + "\" in syntax configuration folder \"" + syntaxFile.getParent() + "\"");
 			return null;
 		}
 
@@ -77,7 +76,7 @@ public class SyntaxBuilder {
 		// Gets the first line of the syntax file and stores it to "syntaxString". If the file is empty, prints
 		// and appropriate error message and returns
 		if (!scanner.hasNext()) {
-			ErrorManager.printErrorMessage(debugMode, "No data found within file");
+			ErrorManager.printErrorMessage(showErrors, "No data found within file");
 			scanner.close();
 			return null;
 		}
@@ -93,7 +92,7 @@ public class SyntaxBuilder {
 		}
 
 		if (currentChar != '{') {
-			ErrorManager.printErrorMessage(debugMode, "Syntax file must start with open bracket");
+			ErrorManager.printErrorMessage(showErrors, "Syntax file must start with open bracket");
 			scanner.close();
 			return null;
 		}
@@ -123,7 +122,7 @@ public class SyntaxBuilder {
 						lastInQuotes += '\t';
 					} else if (syntaxEscapeCharacters.contains(currentChar)) {
 						lastInQuotes += "\\" + currentChar;
-					} else ErrorManager.printErrorMessage(debugMode, "Quotations contain invalid escase character \"\\" + currentChar + "\"", currentLine);
+					} else ErrorManager.printErrorMessage(showErrors, "Quotations contain invalid escase character \"\\" + currentChar + "\"", currentLine);
 				} else if (currentChar == '\"') {
 					switch (lastToken) {
 						case OPEN_BRACKET:
@@ -177,7 +176,7 @@ public class SyntaxBuilder {
 		if (c == '\"') {
 			lastInQuotes = "";
 			betweenQuotes = true;
-		} else ErrorManager.printErrorMessage(debugMode, s, currentLine);
+		} else ErrorManager.printErrorMessage(showErrors, s, currentLine);
 	}
 	
 }

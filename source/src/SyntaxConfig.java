@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;;
 
 public class SyntaxConfig {
 
-    boolean validConfig;
+    private boolean validConfig;
     private String assemblerSyntaxFileName;
     private String compilerSyntaxFileName;
     private String assemblableFileExtension;
@@ -17,6 +17,7 @@ public class SyntaxConfig {
         compilableFileExtension = ".comp";
     }
 
+    public boolean isValid() { return validConfig; }
     public String getAssemblerSyntaxFileName() { return assemblerSyntaxFileName; }
     public String getCompilerSyntaxFileName() { return compilerSyntaxFileName; }
     public String getAssemblableFileExtension() { return assemblableFileExtension; }

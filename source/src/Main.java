@@ -1,4 +1,4 @@
-import java.util.InputMismatchException;
+import java.io.File;
 import java.util.Scanner;
 public class Main {
 
@@ -7,7 +7,9 @@ public class Main {
 	private static enum MenuScreen {
 		START,
 		DEBUG_START,
-		DEBUG_FILE_SELECTION,
+		DEBUG_PROFILE_ERRORS,
+		DEBUG_PROFILE_FILE_SELECTION,
+		DEBUG_FILE_ERRORS,
 		EXIT
 	}
 	
@@ -31,6 +33,8 @@ public class Main {
 
 		MenuScreen currentMenu = MenuScreen.START;
 		SyntaxProfile currentProfile = null;
+		File currentFile = null;
+		boolean currentFileContainsErrors = false;
 
 		int input = -2;
 
@@ -67,8 +71,25 @@ public class Main {
 						System.out.println();
 					}
 					break;
-				case DEBUG_FILE_SELECTION:
-					System.out.println("Test debug file selection message");
+				case DEBUG_PROFILE_ERRORS:
+						System.out.println("Please fix the above errors, then press enter to view updated error list, or enter 0 to go back");
+					break;
+				case DEBUG_PROFILE_FILE_SELECTION:
+					System.out.println("Syntax profile \"" + currentProfile + "\" contains no errors. Please select one of the following syntax files to debug:\n\n"
+									+  "1. " + currentProfile.getAssemblerSyntaxFile().getName() + "\n"
+									+  "2. " + currentProfile.getCompilerSyntaxFile().getName());
+					break;
+				case DEBUG_FILE_ERRORS:
+					// SyntaxBuilder.build(currentFile.getPath(), true);
+					/*
+					 * eventually must replace false with a "does file contain errors" test
+					 */
+					if (false) {
+						currentFileContainsErrors = true;
+					} else {
+						System.out.println("No errors found!\n\nPress enter to return to syntax file selection");
+						currentFileContainsErrors = false;
+					}
 					break;
 				default:
 					break;
@@ -76,8 +97,8 @@ public class Main {
 	
 			System.out.println();
 			try {
-				input = scanner.nextInt();
-			} catch (InputMismatchException e) {
+				input = Integer.parseInt(scanner.nextLine());
+			} catch (NumberFormatException e) {
 				input = -2;
 			}
 
@@ -105,26 +126,65 @@ public class Main {
 						System.out.println("Syntax profile \"" + currentProfile + "\" has been selected\n");
 						if (!currentProfile.isValid()) {
 							System.out.println("Syntax profile \"" + currentProfile + "\" contains the following errorrs:");
+							currentProfile.reloadProfile(true);
+							currentMenu = MenuScreen.DEBUG_PROFILE_ERRORS;
+						} else {
+							System.out.println("Syntax profile \"" + currentProfile + "\" contains no errors. Please select one of the following syntax files to debug:\n\n"
+											+  "1. " + currentProfile.getAssemblerSyntaxFile().getName() + "\n"
+											+  "2. " + currentProfile.getCompilerSyntaxFile().getName());
+							currentMenu = MenuScreen.DEBUG_PROFILE_FILE_SELECTION;			
 						}
-						currentMenu = MenuScreen.DEBUG_FILE_SELECTION;
 					}
 					break;
-				case DEBUG_FILE_SELECTION:
-					if (input != 0) System.out.println("Invalid input. Please try again");
-					if (input == 0) {
+				case DEBUG_PROFILE_ERRORS:
+					if (input != 0) {
+						if (!currentProfile.getSyntaxConfig().isValid()) {
+							System.out.println("Reloading syntax profile\n");
+							currentProfile.reloadProfile(false);
+							if (currentProfile.isValid()) {
+								System.out.println("All errors fixed!");
+								currentMenu = MenuScreen.DEBUG_PROFILE_FILE_SELECTION;
+							} else {
+								System.out.println("Syntax profile \"" + currentProfile + "\" contains the following errorrs:");
+								currentProfile.reloadProfile(true);
+							}
+						}
+					} else if (input == 0) {
 						System.out.println("Returning to syntax profile selection\n\nPlease select one of the following syntax profiles:");
 						currentMenu = MenuScreen.DEBUG_START;
+					}
+					break;
+				case DEBUG_PROFILE_FILE_SELECTION:
+					if (input == 1) {
+						currentFile = currentProfile.getAssemblerSyntaxFile();
+						System.out.println("Syntax file \"" + currentFile.getName() + "\" contains the following errors:");
+						currentMenu = MenuScreen.DEBUG_FILE_ERRORS;
+					} else if (input == 2){
+						currentFile = currentProfile.getCompilerSyntaxFile();
+						System.out.println("Syntax file \"" + currentFile.getName() + "\" contains the following errors:");
+						currentMenu = MenuScreen.DEBUG_FILE_ERRORS;
+					} else if (input == 0) {
+						System.out.println("Returning to syntax profile selection\n\nPlease select one of the following syntax profiles:");
+						currentMenu = MenuScreen.DEBUG_START;
+					} else {
+						System.out.println("Invalid input. Please try again");
+					}
+					break;
+				case DEBUG_FILE_ERRORS:
+					if (input == 0 || !currentFileContainsErrors) {
+						System.out.println("Returning to syntax file selection");
+						currentMenu = MenuScreen.DEBUG_PROFILE_FILE_SELECTION;
+					} else {
+						System.out.println("Reloading syntax file\n\nSyntax file \"" + currentFile.getName() + "\" contains the following errors:");
 					}
 					break;
 				default:
 					break;
 			}
-
 		}
 
 		System.out.println("Exiting program");
 		return input;
 
 	}
-
 }
