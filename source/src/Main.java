@@ -75,7 +75,7 @@ public class Main {
 						System.out.println("Please fix the above errors, then press enter to view updated error list, or enter 0 to go back");
 					break;
 				case DEBUG_PROFILE_FILE_SELECTION:
-					System.out.println("Syntax profile \"" + currentProfile + "\" contains no errors. Please select one of the following syntax files to debug:\n\n"
+					System.out.println("Please select one of the following syntax files to debug:\n\n"
 									+  "1. " + currentProfile.getAssemblerSyntaxFile().getName() + "\n"
 									+  "2. " + currentProfile.getCompilerSyntaxFile().getName());
 					break;
@@ -129,9 +129,7 @@ public class Main {
 							currentProfile.reloadProfile(true);
 							currentMenu = MenuScreen.DEBUG_PROFILE_ERRORS;
 						} else {
-							System.out.println("Syntax profile \"" + currentProfile + "\" contains no errors. Please select one of the following syntax files to debug:\n\n"
-											+  "1. " + currentProfile.getAssemblerSyntaxFile().getName() + "\n"
-											+  "2. " + currentProfile.getCompilerSyntaxFile().getName());
+							System.out.println("Syntax profile \"" + currentProfile + "\" contains no errors.");
 							currentMenu = MenuScreen.DEBUG_PROFILE_FILE_SELECTION;			
 						}
 					}
