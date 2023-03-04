@@ -1,11 +1,8 @@
-import java.io.File;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 public class Main {
 
 	private static Scanner scanner = new Scanner(System.in);
-	private static boolean debugMode = false;
 
 	private static enum MenuScreen {
 		START,
@@ -17,7 +14,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		System.out.println();
-		if (!SettingsManager.loadSettings()) {
+		if (!ProfileManager.loadProfiles()) {
 			System.out.println("Press enter to terminate the program");
 			scanner.nextLine();
 			return;
@@ -32,41 +29,37 @@ public class Main {
 
 	private static int promptConfigSelection() {
 
-		ArrayList<SyntaxConfiguration> validConfigs = SettingsManager.getLoadedConfigurations();
-		ArrayList<SyntaxConfiguration> allConfigs = SettingsManager.getAllConfigurations();
-
 		MenuScreen currentMenu = MenuScreen.START;
-		SyntaxConfiguration currentSyntaxConfiguration = null;
+		SyntaxProfile currentProfile = null;
 
 		int input = -2;
 
 		System.out.println("To select and option, type the corresponding number next to the option and press enter\nAt any point, enter 0 to return to the previous prompt/exit the program\n");
 
-		if (SettingsManager.getLoadedConfigurations().size() == 0) {
+		if (ProfileManager.validProfiles.size() == 0) {
 			System.out.println("No valid syntax profiles found. Please enter -1 to enter debug mode, or press enter to end the program\n");
 			if (scanner.nextLine().equals("-1")) {
-				System.out.println("Debug mode enabled\n\nPlease select one of the following syntax profiles to debug:\n");
+				System.out.println("Debug mode enabled\n\nPlease select one of the following syntax profiles to debug:");
 				currentMenu = MenuScreen.DEBUG_START;
-				debugMode = true;
 			} else {
 				currentMenu = MenuScreen.EXIT;
 			}
-		} else System.out.println("Please select one of the following syntax profiles:\n");
+		} else System.out.println("Please select one of the following syntax profiles:");
 
 		while (currentMenu != MenuScreen.EXIT) {
-			
+			System.out.println();
 			switch (currentMenu) {
 				case START:
-					for (int i = 0; i < validConfigs.size(); i++) {
-						System.out.println((i + 1) + ". " + validConfigs.get(i));
+					for (int i = 0; i < ProfileManager.validProfiles.size(); i++) {
+						System.out.println((i + 1) + ". " + ProfileManager.validProfiles.get(i));
 					}
 					break;
 				case DEBUG_START:
-					for (int i = 0; i < allConfigs.size(); i++) {
-						System.out.print((i + 1) + ". " + allConfigs.get(i));
+					for (int i = 0; i < ProfileManager.allProfiles.size(); i++) {
+						System.out.print((i + 1) + ". " + ProfileManager.allProfiles.get(i));
 						boolean isValid = false;
-						for (int j = 0; j < validConfigs.size(); j++) {
-							if (allConfigs.get(i).equals(validConfigs.get(j))) {
+						for (int j = 0; j < ProfileManager.validProfiles.size(); j++) {
+							if (ProfileManager.allProfiles.get(i).equals(ProfileManager.validProfiles.get(j))) {
 								isValid = true;
 							}
 						}
@@ -75,10 +68,7 @@ public class Main {
 					}
 					break;
 				case DEBUG_FILE_SELECTION:
-					if (!currentSyntaxConfiguration.getConfigSettings().isValid()) {
-						System.out.println("Syntax profile \"" + currentSyntaxConfiguration + "\" contains the following errorrs:");
-						ConfigSettings.load(currentSyntaxConfiguration.getConfigSettings().getConfigFile(), true);
-					}
+					System.out.println("Test debug file selection message");
 					break;
 				default:
 					break;
@@ -93,35 +83,36 @@ public class Main {
 
 			switch (currentMenu) {
 				case START:
-					if (input < -1 || input > validConfigs.size()) input = -2;
-					if (input == -2) System.out.println("Invalid input. Please try again\n");
+					if (input < -1 || input > ProfileManager.validProfiles.size()) input = -2;
+					if (input == -2) System.out.println("Invalid input. Please try again");
 					else if (input == 0) currentMenu = MenuScreen.EXIT;
 					else if (input == -1) {
-						System.out.println("Debug mode enabled\n\nPlease select one of the following syntax profiles to debug:\n");
-						debugMode = true;
+						System.out.println("Debug mode enabled\n\nPlease select one of the following syntax profiles to debug:");
 						currentMenu = MenuScreen.DEBUG_START;
 					} else {
 
 					}
 					break;
 				case DEBUG_START:
-					if (input < -1 || input > allConfigs.size()) input = -2;
-					if (input == -2) System.out.println("Invalid input. Please try again\n");
+					if (input < -1 || input > ProfileManager.allProfiles.size()) input = -2;
+					if (input == -2) System.out.println("Invalid input. Please try again");
 					else if (input == 0) currentMenu = MenuScreen.EXIT;
 					else if (input == -1) {
-						System.out.println("Debug mode disabled\n\nPlease select one of the following syntax profiles:\n");
-						debugMode = false;
+						System.out.println("Debug mode disabled\n\nPlease select one of the following syntax profiles:");
 						currentMenu = MenuScreen.START;
 					} else {
-						currentSyntaxConfiguration = SettingsManager.getAllConfigurations().get(input - 1);
-						System.out.println("Syntax profile \"" + currentSyntaxConfiguration.getConfigSettings().getConfigName() + "\" has been selected\n");
+						currentProfile = ProfileManager.allProfiles.get(input - 1);
+						System.out.println("Syntax profile \"" + currentProfile + "\" has been selected\n");
+						if (!currentProfile.isValid()) {
+							System.out.println("Syntax profile \"" + currentProfile + "\" contains the following errorrs:");
+						}
 						currentMenu = MenuScreen.DEBUG_FILE_SELECTION;
 					}
 					break;
 				case DEBUG_FILE_SELECTION:
-					if (input != 0) System.out.println("Invalid input. Please try again\n");
+					if (input != 0) System.out.println("Invalid input. Please try again");
 					if (input == 0) {
-						System.out.println("Returning to syntax profile selection\n\nPlease select one of the following syntax profiles:\n");
+						System.out.println("Returning to syntax profile selection\n\nPlease select one of the following syntax profiles:");
 						currentMenu = MenuScreen.DEBUG_START;
 					}
 					break;
