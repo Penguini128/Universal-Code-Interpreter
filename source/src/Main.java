@@ -80,7 +80,7 @@ public class Main {
 									+  "2. " + currentProfile.getCompilerSyntaxFile().getName());
 					break;
 				case DEBUG_FILE_ERRORS:
-					// SyntaxBuilder.build(currentFile.getPath(), true);
+					SyntaxBuilder.build(currentFile.getPath(), true);
 					/*
 					 * eventually must replace false with a "does file contain errors" test
 					 */

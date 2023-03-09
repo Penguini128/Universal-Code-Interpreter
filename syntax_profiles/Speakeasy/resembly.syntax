@@ -4,9 +4,9 @@
 	"STATEMENT_DELIMITER" <"\n">
 	"TOKEN_DELIMITER" <" ">
 
-	"IMMEDIATE" (i) <8BV>
-	"REGISTER" (r) <"Reg" + 3BI>
-	"PIN" (p) <"P." + 3BI>
+	"IMMEDIATE" (i) *"8BV"*
+	"REGISTER" (r) *"Reg + 3BI"*
+	"PIN" (p) *"P. + 3BI"*
 }
 
 "Nop" ["0000000000000000"]

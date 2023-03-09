@@ -19,9 +19,13 @@ public class SyntaxBuilder {
 		OPEN_PARENTHESIS,
 		CLOSED_PARENTHESIS,
 		COMMA,
+		ARROW_INDICATOR,
+		OPENING_ASTERISK,
+		CLOSING_ASTERISK,
 		SPECIAL_CASE_NAME,
+		SPECIAL_CASE_TOKEN,
 		SPECIAL_CASE_ESCAPE,
-		SPECIAL_CASE_FORMAT
+		SPECIAL_CASE_ESCAPE_SEQUENCE
 	}
 	
 	private static final String defaultOpenBlock = "{";
@@ -36,6 +40,7 @@ public class SyntaxBuilder {
 
 	private static String lastInQuotes;
 	private static String lastSpecialCaseName;
+	private static String lastSpecialEscapeSequence;
 	
 	/*
 	 *  Method takes in a file path, debug value, and array of valid special format tokens, and will
@@ -53,6 +58,7 @@ public class SyntaxBuilder {
 		int currentLine = 1;
 		lastInQuotes = "";
 		lastSpecialCaseName = "";
+		lastSpecialEscapeSequence = "";
 		Stack<Character> pairTracker = new Stack<Character>();
 
 		ArrayList<Character> syntaxEscapeCharacters = new ArrayList<Character>();
@@ -124,10 +130,16 @@ public class SyntaxBuilder {
 						lastInQuotes += "\\" + currentChar;
 					} else ErrorManager.printErrorMessage(showErrors, "Quotations contain invalid escase character \"\\" + currentChar + "\"", currentLine);
 				} else if (currentChar == '\"') {
+					betweenQuotes = false;
 					switch (lastToken) {
 						case OPEN_BRACKET:
-						case SPECIAL_CASE_FORMAT:
 							lastToken = SyntaxFileToken.SPECIAL_CASE_NAME;
+							break;
+						case OPEN_CHEVRON:
+							lastToken = SyntaxFileToken.SPECIAL_CASE_TOKEN;
+							break;
+						case OPENING_ASTERISK:
+							lastToken = SyntaxFileToken.SPECIAL_CASE_ESCAPE_SEQUENCE;
 							break;
 						default:
 							break;
@@ -139,7 +151,8 @@ public class SyntaxBuilder {
 					case OPEN_BRACKET:
 						if (currentChar == '}') {
 							inSpecialCaseBlock = false;
-						} else attemptOpenQuotes(currentChar, "Open bracket must be followed by specail case specification, or closed bracket");
+							lastToken = SyntaxFileToken.CLOSED_BRACKET;
+						} else attemptOpenQuotes(currentChar, "Open bracket must be followed by special case specification, or closed bracket");
 						break;
 					case SPECIAL_CASE_NAME:
 						if (currentChar == '(') { lastToken = SyntaxFileToken.OPEN_PARENTHESIS; }
@@ -148,12 +161,47 @@ public class SyntaxBuilder {
 						break;
 					case OPEN_PARENTHESIS:
 						if (!syntaxEscapeCharacters.contains(currentChar)) {
-
+							System.out.print("[ADDED ESCAPE CHARACTER: " + currentChar + "]");
+							syntaxEscapeCharacters.add(currentChar);
+							lastToken = SyntaxFileToken.SPECIAL_CASE_ESCAPE;
 						} else ErrorManager.printErrorMessage("Specified escape character \'" + currentChar + "\' is already assigned (by default, or earlier in" + 
 											"\n\t the syntax file. Escape character must be changed", currentLine);
 						break;
+					case CLOSED_PARENTHESIS:
+						if (currentChar == '*') { 
+							lastToken = SyntaxFileToken.OPENING_ASTERISK; 
+						}
+						else ErrorManager.printErrorMessage("Closed parenthesis msut be followed by an asterisk", currentLine);
+						break;
 					case OPEN_CHEVRON:
 						attemptOpenQuotes(currentChar, "Open chevron must be followed by a token in quotes");
+						break;
+					case SPECIAL_CASE_TOKEN:
+						if (currentChar == '>') { lastToken = SyntaxFileToken.CLOSED_CHEVRON; }
+						else ErrorManager.printErrorMessage("Special case token must be followed by a closed cheveron");
+						break;
+					case CLOSED_CHEVRON:
+						if (currentChar == '}') {
+							inSpecialCaseBlock = false;
+							lastToken = SyntaxFileToken.CLOSED_BRACKET;
+						} else attemptOpenQuotes(currentChar, "Closed chevron must be followed by special case specification, or closed bracket");
+						break;
+					case SPECIAL_CASE_ESCAPE:
+						if (currentChar == ')') { lastToken = SyntaxFileToken.CLOSED_PARENTHESIS; }
+						else ErrorManager.printErrorMessage("Special case escape character must be followed by closed parenthesis", currentLine);
+						break;
+					case OPENING_ASTERISK:
+						attemptOpenQuotes(currentChar, "Opening asterisk must be followed by a escape sequence in quotes");
+						break;
+					case SPECIAL_CASE_ESCAPE_SEQUENCE:
+						if (currentChar == '*') { lastToken = SyntaxFileToken.CLOSING_ASTERISK; }
+						else ErrorManager.printErrorMessage("Special case escape sequence must be followed by a closing asterisk", currentLine);
+						break;
+					case CLOSING_ASTERISK:
+						if (currentChar == '}') {
+							inSpecialCaseBlock = false;
+							lastToken = SyntaxFileToken.CLOSED_BRACKET;
+						} else attemptOpenQuotes(currentChar, "Closed chevron must be followed by special case specification, or closed bracket");
 						break;
 					default:
 						break;
