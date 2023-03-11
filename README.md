@@ -11,3 +11,5 @@ When the program start, it will prompt the users with all valid syntax profiles,
 The program will then output the resulting compiled and/or assembled files, or print errors if the inputted file contains errors according to the specified syntax in the syntax profile.
 
 This program also contains a debug mode for debugging syntax profiles. This allows users that are developing syntax profiles to address errors in their profiles without distracting from the main user experience. This debug mode is enabled by inputting ```-1``` in the main menu of the program.
+
+test message
